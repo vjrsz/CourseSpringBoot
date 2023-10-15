@@ -1,8 +1,10 @@
 package com.vjrszcode.coursespringboot.config;
 
+import com.vjrszcode.coursespringboot.entities.Category;
 import com.vjrszcode.coursespringboot.entities.Order;
 import com.vjrszcode.coursespringboot.entities.User;
 import com.vjrszcode.coursespringboot.entities.enums.OrderStatus;
+import com.vjrszcode.coursespringboot.repositories.CategoryRepository;
 import com.vjrszcode.coursespringboot.repositories.OrderRepository;
 import com.vjrszcode.coursespringboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,23 @@ import java.util.Arrays;
 public class TestConfig implements CommandLineRunner {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public TestConfig(UserRepository userRepository, OrderRepository orderRepository) {
+    public TestConfig(UserRepository userRepository, OrderRepository orderRepository, CategoryRepository categoryRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        Category cat1 = new Category(null, "Electronics");
+        Category cat2 = new Category(null, "Books");
+        Category cat3 = new Category(null, "Computers");
+        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+
+
         User u1 = new User(null, "jao", "jao@gamil.com", "99999", "12345");
         User u2 = new User(null, "jao2", "jao2@gamil.com", "99999", "12345");
         userRepository.saveAll(Arrays.asList(u1, u2));
@@ -35,5 +45,7 @@ public class TestConfig implements CommandLineRunner {
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+
+
     }
 }
